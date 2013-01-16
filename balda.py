@@ -19,7 +19,7 @@ def CleanBackground():
 def NewWord():
     newword=askstring("Новое слово","Введите слово")
     if len(newword)<3:
-        showerror("ошибка!","длина слова должна быть больше 2 символов")
+        showerror("ошибка!","длина слова должна быть меньше 3 символов")
         return
     dictfile=open("userdict","a")
     dictfile.write(newword+"\n")
@@ -30,7 +30,7 @@ def NewGame():
     global usedwords,listcell
     usedwords=[]
     listcell=[]
-    firstword=askstring("Начало игры","Введите слово") #"слово" 
+    firstword="слово" #askstring("Начало игры","Введите слово") #
     usedwords.append(firstword)
     if len(firstword)!=5:
         showerror("ошибка!","длина слова должна быть 5 символов")
