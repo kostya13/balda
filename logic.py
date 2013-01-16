@@ -55,7 +55,9 @@ def SearchInDic():
             for i in dic[key][size]:
                 if pattern.match(i):
                     # print("=",w,i)
-                    finded.append(i)
+                    index=w[0].index('.')
+                    newletter=i[index]
+                    finded.append((i,w[1],newletter,index))
     return finded
         
 

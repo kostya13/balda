@@ -12,6 +12,11 @@ def CleanBoard():
         for j in range(5):
             rows[i][j].delete(0,END)        
 
+def CleanBackground():
+    for i in range(5):
+        for j in range(5):
+            rows[i][j].config(bg='white')     
+
 def NewGame():
     firstword="слово" #askstring("Начало игры","Введите слово")
     usedwords.append(firstword)
@@ -21,10 +26,10 @@ def NewGame():
     CleanBoard()
     for i in range(5):
        rows[2][i].insert(END,firstword[i])
-       rows[2][i].config(bg='yellow')
     findwords.config(state=NORMAL)
 
 def FindWords():
+    global listcell
     if words.size():
         words.delete(0,words.size())
     cellrow=[]
@@ -40,17 +45,33 @@ def FindWords():
         c.MakeNodes(cellrow)
         # print(c.letter)
     newwords=[]
+    listcell=[]
     for w in logic.FindWords(cells):
-        if w not in usedwords:
-            words.insert('end',w)
-            newwords.append(w)
+        if w[0] not in usedwords:
+            words.insert('end',w[0])
+            newwords.append(w[0])
+            listcell.append((w[1],w[2],w[3]))
     usedwords.extend(newwords)
     
+
+def ListClicked(event):
+    index = words.curselection() 
+    if index:
+        CleanBackground()
+        label = words.get(index)  
+        item=listcell[int(index[0])]
+        for i in item[0]:
+            rows[i.row][i.column].config(bg='yellow')
+        newletterpos=rows[item[0][item[2]].row][item[0][item[2]].column]
+        newletterpos.delete(0,END)
+        newletterpos.insert(END,item[1])
+        newletterpos.config(bg='cyan')
 
 
 board = Frame(root, bd=5, relief=RAISED)
 rows = []
 usedwords=[]
+listcell=[]
 
 for i in range(5):
     cols = []
@@ -62,10 +83,11 @@ for i in range(5):
 
 newgame = Button(root, text='Новая игра',command=NewGame)
 findwords = Button(root, text='Найти слова',command=FindWords,state=DISABLED)
-words =  Listbox(root, height=30)
-newgame.pack()
+words =  Listbox(root, height=20,selectmode=SINGLE)
+words.bind('<Double-1>', ListClicked) 
+newgame.pack(pady=10)
 board.pack()
-findwords.pack()
+findwords.pack(pady=3)
 words.pack()
 logic.Init()
 mainloop()
