@@ -30,7 +30,7 @@ def NewGame():
     global usedwords,listcell
     usedwords=[]
     listcell=[]
-    firstword="слово" #askstring("Начало игры","Введите слово") #
+    firstword=askstring("Начало игры","Введите слово") #"слово" #
     usedwords.append(firstword)
     if len(firstword)!=5:
         showerror("ошибка!","длина слова должна быть 5 символов")

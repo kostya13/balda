@@ -58,13 +58,6 @@ def LoadData(filename):
         AppendWord('.',size,word)
         MakeTree(word,tree)
 
-def AddWord(letters):
-    if len(letters)>2:
-        word=''.join([c.letter for c in letters])
-        # print(word)
-        if ('.' in word) and (word not in findcheck) and FindTree(word,tree): #(word not in [f[0] for f in findwords]) and 
-            findwords.append((word,letters))
-            findcheck[word]=True
 
 def FindTree(w,t):
     # print(w,t)
@@ -84,14 +77,14 @@ def FindTree(w,t):
 
 def SearchInDic():
     finded=[]
-    c=0
-    print("searched: ",len(findwords))
+    # c=0
+    # print("searched: ",len(findwords))
     for w in findwords:
         if w[0] not in rawwords:
             rawwords[w[0]]=True
             # print(w[0])
         if rawwords[w[0]]:
-            c+=1
+            # c+=1
             size=len(w[0])
             pattern=re.compile(w[0])
             key=w[0][0]
@@ -109,7 +102,7 @@ def SearchInDic():
         # print(w[0],rawwords[w[0]],[f[0] for f in finded])
     # print(w[0],rawwords[w[0]])  
     # print(finded)
-    print("c=",c)
+    # print("c=",c)
     return finded
         
 
@@ -124,12 +117,22 @@ def FindWords(cells):
         Search(c,[],[],False)
     return SearchInDic()
 
+def AddWord(letters):
+    if len(letters)>2:
+        word=''.join([c.letter for c in letters])
+        # print(word)
+        if ('.' in word) and (word not in findcheck): #(word not in [f[0] for f in findwords]) and 
+            findwords.append((word,letters))
+            findcheck[word]=True
 
 def Search(cell,letters,visited,hasempty):
     # print("->",letters,cell.letter,cell.row,cell.column)
     #если €чейка была посещена или
     #пуста€, а пуста€ €чейка в слове уже была или
     #найдено слово длинее, чем самое длинное слово в словаре
+    word=''.join([c.letter for c in letters])
+    if len(word)>2 and not FindTree(word,tree):
+        return None
     if cell in visited or (cell.letter=='.' and hasempty) or len(letters)>(maxsize-1):
         return None
     letters.append(cell)
