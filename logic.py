@@ -96,7 +96,7 @@ def Search(cell,letters,visited,hasempty):
     #если €чейка была посещена или
     #пуста€, а пуста€ €чейка в слове уже была или
     #найдено слово длинее, чем самое длинное слово в словаре
-    if cell in visited or (cell.letter=='.' and hasempty) or len(letters)>maxsize:
+    if cell in visited or (cell.letter=='.' and hasempty) or len(letters)>(maxsize-1):
         return None
     letters.append(cell)
     visited.append(cell)

@@ -30,7 +30,7 @@ def NewGame():
     global usedwords,listcell
     usedwords=[]
     listcell=[]
-    firstword="слово" #askstring("Начало игры","Введите слово")
+    firstword=askstring("Начало игры","Введите слово") #"слово" 
     usedwords.append(firstword)
     if len(firstword)!=5:
         showerror("ошибка!","длина слова должна быть 5 символов")
@@ -97,7 +97,7 @@ for i in range(5):
 
 newword = Button(root, text='Добавить в словарь',command=NewWord)
 newgame = Button(root, text='Новая игра',command=NewGame)
-findwords = Button(root, text='Найти слова',command=FindWords)#,state=DISABLED)
+findwords = Button(root, text='Найти слова',command=FindWords,state=DISABLED)
 words =  Listbox(root, height=20,selectmode=SINGLE)
 words.bind('<Double-1>', ListClicked) 
 newword.pack(pady=5)
