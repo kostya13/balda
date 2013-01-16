@@ -9,8 +9,8 @@ findwords=[]
 maxsize=0
 
 def Init():
-    LoadData()
-    # print(dic)
+    LoadData("wordlist")
+    LoadData("userdict")
 
 def TestDic(letter,size):
     if size not in dic[letter]:
@@ -20,10 +20,13 @@ def AppendWord(letter,size,word):
     if word not in dic[letter][size]:    
         dic[letter][size].append(word)
 
-def LoadData():
+def ReloadUserDict():
+    LoadData("userdict")
+
+def LoadData(filename):
     global words,maxsize
     dic['.']={}
-    for w in open("wordlist"):
+    for w in open(filename):
         word=w.strip()
         size=len(word)
         maxsize=max(maxsize,size)

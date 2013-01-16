@@ -4,7 +4,6 @@ from tkinter.simpledialog import askstring
 from tkinter.messagebox   import askquestion, showerror
 import logic
 from cell import *
-root = Tk()
 
 
 def CleanBoard():
@@ -16,6 +15,16 @@ def CleanBackground():
     for i in range(5):
         for j in range(5):
             rows[i][j].config(bg='white')     
+
+def NewWord():
+    newword=askstring("Новое слово","Введите слово")
+    if len(newword)<3:
+        showerror("ошибка!","длина слова должна быть больше 2 символов")
+        return
+    dictfile=open("userdict","a")
+    dictfile.write(newword+"\n")
+    dictfile.close()
+    logic.ReloadUserDict()
 
 def NewGame():
     firstword="слово" #askstring("Начало игры","Введите слово")
@@ -43,7 +52,6 @@ def FindWords():
         cellrow.append(cellcols)
     for c in cells:
         c.MakeNodes(cellrow)
-        # print(c.letter)
     newwords=[]
     listcell=[]
     for w in logic.FindWords(cells):
@@ -68,26 +76,31 @@ def ListClicked(event):
         newletterpos.config(bg='cyan')
 
 
-board = Frame(root, bd=5, relief=RAISED)
+
 rows = []
 usedwords=[]
 listcell=[]
 
+root = Tk()
+board = Frame(root)
 for i in range(5):
     cols = []
     for j in range(5):
-        ent = Entry(board,width=2)
+        ent = Entry(board,width=2,justify=CENTER)
         ent.grid(row=i, column=j, sticky=NSEW)
         cols.append(ent)
     rows.append(cols)
 
+newword = Button(root, text='Добавить слово',command=NewWord)
 newgame = Button(root, text='Новая игра',command=NewGame)
 findwords = Button(root, text='Найти слова',command=FindWords,state=DISABLED)
 words =  Listbox(root, height=20,selectmode=SINGLE)
 words.bind('<Double-1>', ListClicked) 
+newword.pack(pady=5)
 newgame.pack(pady=10)
 board.pack()
 findwords.pack(pady=3)
 words.pack()
+
 logic.Init()
 mainloop()
