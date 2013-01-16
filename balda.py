@@ -27,12 +27,16 @@ def NewWord():
     logic.ReloadUserDict()
 
 def NewGame():
+    global usedwords,listcell
+    usedwords=[]
+    listcell=[]
     firstword="слово" #askstring("Начало игры","Введите слово")
     usedwords.append(firstword)
     if len(firstword)!=5:
         showerror("ошибка!","длина слова должна быть 5 символов")
         return
     CleanBoard()
+    CleanBackground()
     for i in range(5):
        rows[2][i].insert(END,firstword[i])
     findwords.config(state=NORMAL)
@@ -53,7 +57,9 @@ def FindWords():
     for c in cells:
         c.MakeNodes(cellrow)
     listcell=[]
-    for w in logic.FindWords(cells):
+    findedwords=sorted(logic.FindWords(cells),key=lambda item: len(item[0]),reverse=True)
+
+    for w in findedwords:     
         if w[0] not in usedwords:
             words.insert('end',w[0])
             listcell.append((w[1],w[2],w[3]))

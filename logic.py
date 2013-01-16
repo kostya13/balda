@@ -7,6 +7,7 @@ dic={}
 ignore=['ü','û','ú']
 findwords=[]
 findcheck={}
+rawwords={}
 maxsize=0
 
 
@@ -24,7 +25,9 @@ def AppendWord(letter,size,word):
         dic[letter][size].append(word)
 
 def ReloadUserDict():
+    global rawwords
     LoadData("userdict")
+    rawwords={}
 
 def LoadData(filename):
     global words,maxsize
@@ -52,19 +55,27 @@ def AddWord(letters):
 
 def SearchInDic():
     finded=[]
-    print("searched: ",len(findwords))
+    # print("searched: ",len(findwords))
     for w in findwords:
-        print(w[0])
-        size=len(w[0])
-        pattern=re.compile(w[0])
-        key=w[0][0]
-        if (key in dic) and (size in dic[key]):
-            for i in dic[key][size]:
-                if pattern.match(i):
-                    # print("=",w[0],i)
-                    index=w[0].index('.')
-                    newletter=i[index]
-                    finded.append((i,w[1],newletter,index))
+        if w[0] not in rawwords:
+            rawwords[w[0]]=True
+            # print(w[0])
+        if rawwords[w[0]]:
+            size=len(w[0])
+            pattern=re.compile(w[0])
+            key=w[0][0]
+            if (key in dic) and (size in dic[key]):
+                for i in dic[key][size]:
+                    if pattern.match(i):
+                        # print("=",w[0],i)
+                        index=w[0].index('.')
+                        newletter=i[index]
+                        finded.append((i,w[1],newletter,index))
+            if not finded:
+                rawwords[w[0]]=False
+
+        # print(w[0],rawwords[w[0]])  
+    # print(finded)
     return finded
         
 
@@ -73,7 +84,7 @@ def FindWords(cells):
     findwords=[]
     findcheck={}
     for c in cells:
-        print( c.row,c.column)
+        # print( c.row,c.column)
         if c.letter in ignore:
             continue
         Search(c,[],[],False)
