@@ -6,9 +6,12 @@ import re
 dic={}
 ignore=['ь','ы','ъ']
 findwords=[]
+findcheck={}
 maxsize=0
 
+
 def Init():
+    dic['.']={}
     LoadData("wordlist")
     LoadData("userdict")
 
@@ -25,7 +28,6 @@ def ReloadUserDict():
 
 def LoadData(filename):
     global words,maxsize
-    dic['.']={}
     for w in open(filename):
         word=w.strip()
         size=len(word)
@@ -37,7 +39,6 @@ def LoadData(filename):
             dic[first]={}
         TestDic(first,size)
         AppendWord(first,size,word)
-
         #все слова для поиска слов начинающихся с пустой клетки
         TestDic('.',size)
         AppendWord('.',size,word)
@@ -45,19 +46,22 @@ def LoadData(filename):
 def AddWord(letters):
     if len(letters)>2:
         word=''.join([c.letter for c in letters])
-        if (word not in [f[0] for f in findwords]) and ('.' in word):
+        if ('.' in word) and (word not in findcheck): #(word not in [f[0] for f in findwords]) and 
             findwords.append((word,letters))
+            findcheck[word]=True
 
 def SearchInDic():
     finded=[]
+    print("searched: ",len(findwords))
     for w in findwords:
+        print(w[0])
         size=len(w[0])
         pattern=re.compile(w[0])
         key=w[0][0]
         if (key in dic) and (size in dic[key]):
             for i in dic[key][size]:
                 if pattern.match(i):
-                    # print("=",w,i)
+                    # print("=",w[0],i)
                     index=w[0].index('.')
                     newletter=i[index]
                     finded.append((i,w[1],newletter,index))
@@ -65,13 +69,15 @@ def SearchInDic():
         
 
 def FindWords(cells):
-    global findwords
+    global findwords,findcheck
     findwords=[]
+    findcheck={}
     for c in cells:
+        print( c.row,c.column)
         if c.letter in ignore:
             continue
         Search(c,[],[],False)
-    return sorted(SearchInDic(),key=len,reverse=True)
+    return SearchInDic()
 
 
 def Search(cell,letters,visited,hasempty):

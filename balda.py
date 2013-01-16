@@ -52,14 +52,12 @@ def FindWords():
         cellrow.append(cellcols)
     for c in cells:
         c.MakeNodes(cellrow)
-    newwords=[]
     listcell=[]
     for w in logic.FindWords(cells):
         if w[0] not in usedwords:
             words.insert('end',w[0])
-            newwords.append(w[0])
             listcell.append((w[1],w[2],w[3]))
-    usedwords.extend(newwords)
+    
     
 
 def ListClicked(event):
@@ -74,7 +72,7 @@ def ListClicked(event):
         newletterpos.delete(0,END)
         newletterpos.insert(END,item[1])
         newletterpos.config(bg='cyan')
-
+        usedwords.append(label)
 
 
 rows = []
@@ -91,9 +89,9 @@ for i in range(5):
         cols.append(ent)
     rows.append(cols)
 
-newword = Button(root, text='Добавить слово',command=NewWord)
+newword = Button(root, text='Добавить в словарь',command=NewWord)
 newgame = Button(root, text='Новая игра',command=NewGame)
-findwords = Button(root, text='Найти слова',command=FindWords,state=DISABLED)
+findwords = Button(root, text='Найти слова',command=FindWords)#,state=DISABLED)
 words =  Listbox(root, height=20,selectmode=SINGLE)
 words.bind('<Double-1>', ListClicked) 
 newword.pack(pady=5)
