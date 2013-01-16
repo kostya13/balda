@@ -41,22 +41,21 @@ def LoadData():
 
 def AddWord(letters):
     if len(letters)>2:
-        word=''.join(letters)
-        if word not in findwords and '.' in word:
-            findwords.append(word)
+        word=''.join([c.letter for c in letters])
+        if (word not in [f[0] for f in findwords]) and ('.' in word):
+            findwords.append((word,letters))
 
 def SearchInDic():
     finded=[]
     for w in findwords:
-        size=len(w)
-        pattern=re.compile(w)
-        key=w[0]
-        if key in dic:
-            if size in dic[key]:
-                for i in dic[key][size]:
-                    if pattern.match(i):
-                        # print("=",w,i)
-                        finded.append(i)
+        size=len(w[0])
+        pattern=re.compile(w[0])
+        key=w[0][0]
+        if (key in dic) and (size in dic[key]):
+            for i in dic[key][size]:
+                if pattern.match(i):
+                    # print("=",w,i)
+                    finded.append(i)
     return finded
         
 
@@ -77,7 +76,7 @@ def Search(cell,letters,visited,hasempty):
     #найдено слово длинее, чем самое длинное слово в словаре
     if cell in visited or (cell.letter=='.' and hasempty) or len(letters)>maxsize:
         return None
-    letters.append(cell.letter)
+    letters.append(cell)
     visited.append(cell)
     if cell.letter=='.':
         hasempty=True
