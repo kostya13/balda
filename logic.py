@@ -125,7 +125,7 @@ def FindWords(cells):
         # print( c.row,c.column)
         if c.letter in ignore:
             continue
-        Search(c,[],[],False)
+        Search(c,[],False)
     return SearchInDic()
 
 def MkWord(seq):
@@ -139,23 +139,20 @@ def AddWord(letters):
             findwords.append((word,letters))
             findcheck[word]=True
 
-def Search(cell,letters,visited,hasempty):
+def Search(cell,letters,hasempty):
     # print("->",letters,cell.letter,cell.row,cell.column)
     word=MkWord(letters) 
-    if len(word)>2 and not FindTree(word,tree):
-        return None
     #если €чейка была посещена или
     #пуста€, а пуста€ €чейка в слове уже была или
     #найдено слово длинее, чем самое длинное слово в словаре
-    if cell in visited or (cell.letter=='.' and hasempty) or len(letters)>(maxsize-1):
+    if cell in letters or (cell.letter=='.' and hasempty) or len(letters)>(maxsize-1) or (len(word)>2 and not FindTree(word,tree)):
         return None
     letters.append(cell)
-    visited.append(cell)
     if cell.letter=='.':
         hasempty=True
     for n in cell.nodes:
         # print("cell",cell.row,cell.column,"-> ",n.row,n.column)
-        res=Search(n,list(letters),list(visited),hasempty)
+        res=Search(n,list(letters),hasempty)
         if not res:
             AddWord(letters)
     return True
