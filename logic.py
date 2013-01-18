@@ -118,12 +118,10 @@ def FindTree(w,t):
         return True
     # print(w,t)
     if w[0]=='.':
-        res=False
         for v in t:
-            res=res or FindTree(v+w[1:],t)
-            if res:
-                break
-        return res
+            if FindTree(v+w[1:],t):
+                return True
+        return False
     if w[0] not  in t:
         return False
     if len(w)==1:
@@ -135,10 +133,11 @@ def Search(cell,letters,hasempty,word):
     #если €чейка была посещена или
     #пуста€, а пуста€ €чейка в слове уже была или
     #найдено слово длинее, чем самое длинное слово в словаре
-    if cell in letters or (cell.letter=='.' and hasempty)  or  not FindTree(word,tree):
+    emptycell = cell.letter=='.'
+    if cell in letters or (emptycell and hasempty)  or  not FindTree(word,tree):
         return None
     letters.append(cell)
-    if cell.letter=='.':
+    if emptycell:
         hasempty=True
     for n in cell.nodes:
         word=MkWord(letters) 
