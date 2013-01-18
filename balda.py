@@ -1,4 +1,5 @@
 # -*- coding: cp1251 -*-
+# графический интерфейс для решателя "Балды"
 from tkinter import *
 from tkinter.simpledialog import askstring
 from tkinter.messagebox   import askquestion, showerror,showinfo,showwarning
@@ -149,8 +150,8 @@ newword = Button(root, text='Добавить в словарь',command=NewWord)
 checkword = Button(root, text='Проверить в словаре',command=CheckWord)
 newgame = Button(root, text='Новая игра',command=NewGame)
 findwords = Button(root, text='Найти слова',command=FindWords,state=DISABLED)
-words =  Listbox(root, height=10,selectmode=EXTENDED)
-usedlist =  Listbox(root, height=22,selectmode=SINGLE)
+words =  Listbox(root, height=7,selectmode=EXTENDED)
+usedlist =  Listbox(root, height=21,selectmode=SINGLE)
 wordcount = Label(text='0')
 addtoused = Button(root, text='Игнорировать слово',command=AddToUsed)
 words.bind('<Button-1>', ListClicked) 
@@ -166,5 +167,4 @@ addtoused.pack()
 
 logic.Init()
 wordcount.config(text="слов: "+str(logic.GetWordCount()))
-clock()
 mainloop()

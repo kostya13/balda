@@ -2,22 +2,22 @@
 # игровая логика
 # from cell import *
 import re
-from time import clock
 
 dic={}
 findwords=set()
 tree={}
-maxsize=0
 wordcount=0
 
-
-
 def Init():
-    dic['.']={}
     LoadData("wordlist")
     LoadData("userdict")
 
+def ReloadUserDict():
+    LoadData("userdict")
+
 def TestDic(letter,size):
+    if  letter not in dic:
+       dic[letter]={}
     if size not in dic[letter]:
         dic[letter][size]=[]
 
@@ -39,21 +39,14 @@ def MakeTree(w,t):
         t[w[0]]={}
     MakeTree(w[1:],t[w[0]])
 
-
-def ReloadUserDict():
-    LoadData("userdict")
-
 def LoadData(filename):
-    global words,maxsize
+    global words
     for w in open(filename):
         word=w.strip()
         size=len(word)
-        maxsize=max(maxsize,size)
         if size<2:
             continue
         first=word[0]
-        if  first not in dic:
-            dic[first]={}
         TestDic(first,size)
         AppendWord(first,size,word)
 
@@ -67,7 +60,6 @@ def CheckWord(word):
         return word in dic[word[0]][len(word)]
     else:
         return False
-
 
 def SearchInDic():
     finded=[]
@@ -92,16 +84,12 @@ def SearchInDic():
     return finded
         
 def FindWords(cells):
-    global findwords,findcheck
+    global findwords
     findwords=set()
-    findcheck={}
     for c in cells:
         # print( c.row,c.column)
         Search(c,[],False,'')
     return SearchInDic()
-
-def MkWord(seq):
-    return ''.join([c.letter for c in seq])
 
 def FindTree(w,t):
     if not w:
@@ -127,7 +115,7 @@ def Search(cell,letters,hasempty,word):
     if emptycell:
         hasempty=True
     for n in cell.nodes:
-        word=MkWord(letters) 
+        word=''.join([c.letter for c in letters])
         # print("cell",cell.row,cell.column,"-> ",n.row,n.column)
         res=Search(n,list(letters),hasempty,word)
         if not res and hasempty:
