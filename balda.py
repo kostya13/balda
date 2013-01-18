@@ -4,6 +4,7 @@ from tkinter.simpledialog import askstring
 from tkinter.messagebox   import askquestion, showerror,showinfo,showwarning
 import logic
 from cell import *
+from time import clock
 
 
 def CleanBoard():
@@ -68,6 +69,7 @@ def NewGame():
 
 def FindWords():
     global listcell,newletterpos
+    # start=clock()
     newletterpos=None
     index = words.curselection() 
     if index:
@@ -91,6 +93,7 @@ def FindWords():
         if w[0] not in usedwords:
             words.insert('end',w[0])
             listcell.append((w[1],w[2],w[3]))
+    # print(clock()-start)
     
     
 def ListClicked(event):
@@ -146,4 +149,5 @@ addtoused.pack()
 
 logic.Init()
 wordcount.config(text="слов: "+str(logic.GetWordCount()))
+clock()
 mainloop()

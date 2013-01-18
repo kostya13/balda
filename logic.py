@@ -2,6 +2,7 @@
 # игровая логика
 from cell import *
 import re
+from time import clock
 
 dic={}
 findwords=set()
@@ -69,10 +70,10 @@ def CheckWord(word):
 
 def SearchInDic():
     finded=[]
-    c=0
+    # c=0
     # print("searched: ",len(findwords))
     for w in findwords:
-        c+=1
+        # c+=1
         size=len(w[0])
         pattern=re.compile(w[0])
         key=w[0][0]
@@ -86,10 +87,9 @@ def SearchInDic():
                     finded.append((i,w[1],newletter,index))
                     wordfound=True
     # print(finded)
-    print("c=",c)
+    # print("c=",c)
     return finded
         
-
 def FindWords(cells):
     global findwords,findcheck
     findwords=set()
@@ -120,7 +120,7 @@ def FindTree(w,t):
 def Search(cell,letters,hasempty,word):
     # print("->",letters,cell.letter,cell.row,cell.column)
     emptycell = cell.letter=='.'
-    if cell in letters or (emptycell and hasempty)  or  not FindTree(word,tree):
+    if  not FindTree(word,tree) or cell in letters or (emptycell and hasempty)  :
         return None
     letters.append(cell)
     if emptycell:
