@@ -1,6 +1,6 @@
 # -*- coding: cp1251 -*-
 # игровая логика
-from cell import *
+# from cell import *
 import re
 from time import clock
 
@@ -9,6 +9,7 @@ findwords=set()
 tree={}
 maxsize=0
 wordcount=0
+
 
 
 def Init():
