@@ -3,7 +3,6 @@ from tkinter import *
 from tkinter.simpledialog import askstring
 from tkinter.messagebox   import askquestion, showerror,showinfo,showwarning
 import logic
-# from cell import *
 from time import clock
 
 class Cell:
@@ -58,7 +57,7 @@ def CheckWord():
 def NewWord():
     newword=askstring("Новое слово","Введите слово")
     if len(newword)<3:
-        showerror("ошибка!","длина слова должна быть меньше 3 символов")
+        showerror("ошибка!","длина слова должна быть не меньше 3 символов")
         return
     if logic.CheckWord(newword):
         return
@@ -70,12 +69,12 @@ def NewWord():
 
 def NewGame():
     global usedwords,listcell
-    usedwords=[]
-    listcell=[]
     firstword=askstring("Начало игры","Введите слово") #"слово" #
     if len(firstword)!=5:
         showerror("ошибка!","длина слова должна быть 5 символов")
         return
+    usedwords=[]
+    listcell=[]
     CleanBoard()
     CleanBackground()
     CleanList(usedlist)
@@ -157,7 +156,7 @@ addtoused = Button(root, text='Игнорировать слово',command=AddToUsed)
 words.bind('<Button-1>', ListClicked) 
 newword.pack()
 checkword.pack(pady=5)
-wordcount.pack(expand=YES, fill=BOTH)
+wordcount.pack()
 newgame.pack(pady=10)
 board.pack()
 findwords.pack(pady=3)
