@@ -4,9 +4,7 @@ from cell import *
 import re
 
 dic={}
-ignore=['ь','ы','ъ']
-findwords=[]
-findcheck={}
+findwords=set()
 rawwords={}
 tree={}
 maxsize=0
@@ -119,27 +117,23 @@ def SearchInDic():
 
 def FindWords(cells):
     global findwords,findcheck
-    findwords=[]
+    findwords=set()
     findcheck={}
     for c in cells:
         # print( c.row,c.column)
-        if c.letter in ignore:
-            continue
-        Search(c,[],False)
+        Search(c,[],False,'')
     return SearchInDic()
 
 def MkWord(seq):
     return ''.join([c.letter for c in seq])
 
-def AddWord(letters):
+def AddWord(letters,word):
     if len(letters)>2:
-        word=MkWord(letters) 
+        # word=MkWord(letters) 
         # print(word)
-        if ('.' in word) : #(word not in [f[0] for f in findwords]) and and (word not in findcheck)
-            findwords.append((word,letters))
-            # findcheck[word]=True
+        findwords.add((word,tuple(letters)))
 
-def Search(cell,letters,hasempty):
+def Search(cell,letters,hasempty,word):
     # print("->",letters,cell.letter,cell.row,cell.column)
     #если €чейка была посещена или
     #пуста€, а пуста€ €чейка в слове уже была или
@@ -150,9 +144,10 @@ def Search(cell,letters,hasempty):
     if cell.letter=='.':
         hasempty=True
     for n in cell.nodes:
+        word=MkWord(letters) 
         # print("cell",cell.row,cell.column,"-> ",n.row,n.column)
-        res=Search(n,list(letters),hasempty)
-        if not res:
-            AddWord(letters)
+        res=Search(n,list(letters),hasempty,word)
+        if not res and hasempty:
+            AddWord(letters,word)
     return True
 
