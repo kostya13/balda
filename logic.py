@@ -135,17 +135,16 @@ def AddWord(letters):
     if len(letters)>2:
         word=MkWord(letters) 
         # print(word)
-        if ('.' in word) and (word not in findcheck): #(word not in [f[0] for f in findwords]) and 
+        if ('.' in word) : #(word not in [f[0] for f in findwords]) and and (word not in findcheck)
             findwords.append((word,letters))
-            findcheck[word]=True
+            # findcheck[word]=True
 
 def Search(cell,letters,hasempty):
     # print("->",letters,cell.letter,cell.row,cell.column)
-    word=MkWord(letters) 
     #если €чейка была посещена или
     #пуста€, а пуста€ €чейка в слове уже была или
     #найдено слово длинее, чем самое длинное слово в словаре
-    if cell in letters or (cell.letter=='.' and hasempty) or len(letters)>(maxsize-1) or (len(word)>2 and not FindTree(word,tree)):
+    if cell in letters or (cell.letter=='.' and hasempty)  or (len(letters)>1 and not FindTree(MkWord(letters),tree)):
         return None
     letters.append(cell)
     if cell.letter=='.':
