@@ -10,6 +10,7 @@ findcheck={}
 rawwords={}
 tree={}
 maxsize=0
+wordcount=0
 
 
 def Init():
@@ -22,8 +23,14 @@ def TestDic(letter,size):
         dic[letter][size]=[]
 
 def AppendWord(letter,size,word):
+    global wordcount
     if word not in dic[letter][size]:    
         dic[letter][size].append(word)
+        if letter != '.':
+            wordcount+=1
+
+def GetWordCount():
+    return wordcount
 
 def MakeTree(w,t):
     if not w:
@@ -59,8 +66,10 @@ def LoadData(filename):
         MakeTree(word,tree)
 
 def CheckWord(word):
-    return word in dic[word[0]][len(word)]
-        
+    if word[0] in dic:
+        return word in dic[word[0]][len(word)]
+    else:
+        return False
 
 def FindTree(w,t):
     # print(w,t)
@@ -76,7 +85,6 @@ def FindTree(w,t):
     if len(w)==1:
           return True
     return FindTree(w[1:],t[w[0]])
-
 
 def SearchInDic():
     finded=[]
@@ -120,9 +128,12 @@ def FindWords(cells):
         Search(c,[],[],False)
     return SearchInDic()
 
+def MkWord(seq):
+    return ''.join([c.letter for c in seq])
+
 def AddWord(letters):
     if len(letters)>2:
-        word=''.join([c.letter for c in letters])
+        word=MkWord(letters) 
         # print(word)
         if ('.' in word) and (word not in findcheck): #(word not in [f[0] for f in findwords]) and 
             findwords.append((word,letters))
@@ -130,12 +141,12 @@ def AddWord(letters):
 
 def Search(cell,letters,visited,hasempty):
     # print("->",letters,cell.letter,cell.row,cell.column)
+    word=MkWord(letters) 
+    if len(word)>2 and not FindTree(word,tree):
+        return None
     #если €чейка была посещена или
     #пуста€, а пуста€ €чейка в слове уже была или
     #найдено слово длинее, чем самое длинное слово в словаре
-    word=''.join([c.letter for c in letters])
-    if len(word)>2 and not FindTree(word,tree):
-        return None
     if cell in visited or (cell.letter=='.' and hasempty) or len(letters)>(maxsize-1):
         return None
     letters.append(cell)

@@ -36,8 +36,6 @@ def CheckWord():
     else:
         showwarning(title,"слово не найдено")
     
-
-
 def NewWord():
     newword=askstring("Новое слово","Введите слово")
     if len(newword)<3:
@@ -49,6 +47,7 @@ def NewWord():
     dictfile.write(newword+"\n")
     dictfile.close()
     logic.ReloadUserDict()
+    wordcount.config(text="слов: "+str(logic.GetWordCount()))
 
 def NewGame():
     global usedwords,listcell
@@ -116,6 +115,7 @@ listcell=[]
 newletterpos=None
 
 root = Tk()
+root.title("Балда игратор")
 board = Frame(root)
 for i in range(5):
     cols = []
@@ -129,12 +129,14 @@ newword = Button(root, text='Добавить в словарь',command=NewWord)
 checkword = Button(root, text='Проверить в словаре',command=CheckWord)
 newgame = Button(root, text='Новая игра',command=NewGame)
 findwords = Button(root, text='Найти слова',command=FindWords,state=DISABLED)
-words =  Listbox(root, height=10,selectmode=SINGLE)
-usedlist =  Listbox(root, height=20,selectmode=SINGLE)
-addtoused = Button(root, text='Добавить в использованные',command=AddToUsed)
-words.bind('<Double-1>', ListClicked) 
-newword.pack(pady=5)
+words =  Listbox(root, height=10,selectmode=EXTENDED)
+usedlist =  Listbox(root, height=22,selectmode=SINGLE)
+wordcount = Label(text='0')
+addtoused = Button(root, text='Игнорировать слово',command=AddToUsed)
+words.bind('<Button-1>', ListClicked) 
+newword.pack()
 checkword.pack(pady=5)
+wordcount.pack(expand=YES, fill=BOTH)
 newgame.pack(pady=10)
 board.pack()
 findwords.pack(pady=3)
@@ -143,4 +145,5 @@ usedlist.pack(pady=3)
 addtoused.pack()
 
 logic.Init()
+wordcount.config(text="слов: "+str(logic.GetWordCount()))
 mainloop()
