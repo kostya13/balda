@@ -69,20 +69,6 @@ def CheckWord(word):
     else:
         return False
 
-def FindTree(w,t):
-    # print(w,t)
-    if w[0]=='.':
-        res=False
-        for v in t:
-            res=res or FindTree(v+w[1:],t)
-            if res:
-                break
-        return res
-    if w[0] not  in t:
-        return False
-    if len(w)==1:
-          return True
-    return FindTree(w[1:],t[w[0]])
 
 def SearchInDic():
     finded=[]
@@ -127,18 +113,29 @@ def FindWords(cells):
 def MkWord(seq):
     return ''.join([c.letter for c in seq])
 
-def AddWord(letters,word):
-    if len(letters)>2:
-        # word=MkWord(letters) 
-        # print(word)
-        findwords.add((word,tuple(letters)))
+def FindTree(w,t):
+    if not w:
+        return True
+    # print(w,t)
+    if w[0]=='.':
+        res=False
+        for v in t:
+            res=res or FindTree(v+w[1:],t)
+            if res:
+                break
+        return res
+    if w[0] not  in t:
+        return False
+    if len(w)==1:
+          return True
+    return FindTree(w[1:],t[w[0]])
 
 def Search(cell,letters,hasempty,word):
     # print("->",letters,cell.letter,cell.row,cell.column)
     #если €чейка была посещена или
     #пуста€, а пуста€ €чейка в слове уже была или
     #найдено слово длинее, чем самое длинное слово в словаре
-    if cell in letters or (cell.letter=='.' and hasempty)  or (len(letters)>1 and not FindTree(MkWord(letters),tree)):
+    if cell in letters or (cell.letter=='.' and hasempty)  or  not FindTree(word,tree):
         return None
     letters.append(cell)
     if cell.letter=='.':
@@ -148,6 +145,7 @@ def Search(cell,letters,hasempty,word):
         # print("cell",cell.row,cell.column,"-> ",n.row,n.column)
         res=Search(n,list(letters),hasempty,word)
         if not res and hasempty:
-            AddWord(letters,word)
+            if len(letters)>2:
+                findwords.add((word,tuple(letters)))
     return True
 
