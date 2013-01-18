@@ -5,7 +5,6 @@ import re
 
 dic={}
 findwords=set()
-rawwords={}
 tree={}
 maxsize=0
 wordcount=0
@@ -40,9 +39,7 @@ def MakeTree(w,t):
 
 
 def ReloadUserDict():
-    global rawwords
     LoadData("userdict")
-    rawwords={}
 
 def LoadData(filename):
     global words,maxsize
@@ -72,32 +69,24 @@ def CheckWord(word):
 
 def SearchInDic():
     finded=[]
-    # c=0
+    c=0
     # print("searched: ",len(findwords))
     for w in findwords:
-        if w[0] not in rawwords:
-            rawwords[w[0]]=True
-            # print(w[0])
-        if rawwords[w[0]]:
-            # c+=1
-            size=len(w[0])
-            pattern=re.compile(w[0])
-            key=w[0][0]
-            wordfound=False
-            if (key in dic) and (size in dic[key]):
-                for i in dic[key][size]:
-                    # print("=",w[0],i)
-                    if pattern.match(i):
-                        index=w[0].index('.')
-                        newletter=i[index]
-                        finded.append((i,w[1],newletter,index))
-                        wordfound=True
-            if not wordfound:
-                rawwords[w[0]]=False
-        # print(w[0],rawwords[w[0]],[f[0] for f in finded])
-    # print(w[0],rawwords[w[0]])  
+        c+=1
+        size=len(w[0])
+        pattern=re.compile(w[0])
+        key=w[0][0]
+        wordfound=False
+        if (key in dic) and (size in dic[key]):
+            for i in dic[key][size]:
+                # print("=",w[0],i)
+                if pattern.match(i):
+                    index=w[0].index('.')
+                    newletter=i[index]
+                    finded.append((i,w[1],newletter,index))
+                    wordfound=True
     # print(finded)
-    # print("c=",c)
+    print("c=",c)
     return finded
         
 
@@ -130,9 +119,6 @@ def FindTree(w,t):
 
 def Search(cell,letters,hasempty,word):
     # print("->",letters,cell.letter,cell.row,cell.column)
-    #если €чейка была посещена или
-    #пуста€, а пуста€ €чейка в слове уже была или
-    #найдено слово длинее, чем самое длинное слово в словаре
     emptycell = cell.letter=='.'
     if cell in letters or (emptycell and hasempty)  or  not FindTree(word,tree):
         return None
