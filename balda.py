@@ -1,7 +1,7 @@
 # -*- coding: cp1251 -*-
 from tkinter import *
 from tkinter.simpledialog import askstring
-from tkinter.messagebox   import askquestion, showerror
+from tkinter.messagebox   import askquestion, showerror,showinfo,showwarning
 import logic
 from cell import *
 
@@ -16,6 +16,10 @@ def CleanBackground():
         for j in range(5):
             rows[i][j].config(bg='white')     
 
+def CleanList(l):
+    if l.size():
+        l.delete(0,l.size())
+
 def AddToUsedList(word):
     usedwords.append(word)
     usedlist.insert('end',word)
@@ -24,10 +28,22 @@ def AddToUsed():
     used=askstring("Использованное слово","Введите слово")
     AddToUsedList(used)
 
+def CheckWord():
+    title="Результат проверки"
+    checkword=askstring("Проверить слово","Введите слово")
+    if logic.CheckWord(checkword):
+        showinfo(title,"слово найдено")
+    else:
+        showwarning(title,"слово не найдено")
+    
+
+
 def NewWord():
     newword=askstring("Новое слово","Введите слово")
     if len(newword)<3:
         showerror("ошибка!","длина слова должна быть меньше 3 символов")
+        return
+    if logic.CheckWord(newword):
         return
     dictfile=open("userdict","a")
     dictfile.write(newword+"\n")
@@ -44,21 +60,21 @@ def NewGame():
         return
     CleanBoard()
     CleanBackground()
-    if usedlist.size():
-        usedlist.delete(0,usedlist.size())
+    CleanList(usedlist)
+    CleanList(words)
     for i in range(5):
        rows[2][i].insert(END,firstword[i])
     findwords.config(state=NORMAL)
     AddToUsedList(firstword)
 
 def FindWords():
-    global listcell
+    global listcell,newletterpos
+    newletterpos=None
     index = words.curselection() 
     if index:
         label = words.get(index)  
         AddToUsedList(label)
-    if words.size():
-        words.delete(0,words.size())
+    CleanList(words)
     cellrow=[]
     cells=[]
     for i in range(5):
@@ -110,6 +126,7 @@ for i in range(5):
     rows.append(cols)
 
 newword = Button(root, text='Добавить в словарь',command=NewWord)
+checkword = Button(root, text='Проверить в словаре',command=CheckWord)
 newgame = Button(root, text='Новая игра',command=NewGame)
 findwords = Button(root, text='Найти слова',command=FindWords,state=DISABLED)
 words =  Listbox(root, height=10,selectmode=SINGLE)
@@ -117,6 +134,7 @@ usedlist =  Listbox(root, height=20,selectmode=SINGLE)
 addtoused = Button(root, text='Добавить в использованные',command=AddToUsed)
 words.bind('<Double-1>', ListClicked) 
 newword.pack(pady=5)
+checkword.pack(pady=5)
 newgame.pack(pady=10)
 board.pack()
 findwords.pack(pady=3)

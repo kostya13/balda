@@ -58,6 +58,9 @@ def LoadData(filename):
         AppendWord('.',size,word)
         MakeTree(word,tree)
 
+def CheckWord(word):
+    return word in dic[word[0]][len(word)]
+        
 
 def FindTree(w,t):
     # print(w,t)
