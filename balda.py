@@ -39,24 +39,18 @@ def CleanList(l):
     if l.size():
         l.delete(0,l.size())
 
-def AddToUsedList(word):
-    usedwords.append(word)
-    usedlist.insert('end',word)
+def AddToUsedList():
+    index = words.curselection() 
+    if index:
+        label = words.get(index)  
+        usedwords.append(label)
+        usedlist.insert('end',label)
 
 def AddToUsed():
-    used=askstring("Использованное слово","Введите слово")
-    AddToUsedList(used)
+    FindWords(True)
 
-def CheckWord():
-    title="Результат проверки"
-    checkword=askstring("Проверить слово","Введите слово")
-    if logic.CheckWord(checkword):
-        showinfo(title,"слово найдено")
-    else:
-        showwarning(title,"слово не найдено")
-    
 def NewWord():
-    newword=askstring("Новое слово","Введите слово")
+    newword=askstring("Новое слово","Введите слово").strip()
     if len(newword)<3:
         showerror("ошибка!","длина слова должна быть не меньше 3 символов")
         return
@@ -67,6 +61,9 @@ def NewWord():
     dictfile.close()
     logic.ReloadUserDict()
     wordcount.config(text="слов: "+str(logic.GetWordCount()))
+
+def DeleteWord():
+    pass
 
 def NewGame():
     global usedwords,listcell
@@ -83,16 +80,18 @@ def NewGame():
     for i in range(5):
        rows[2][i].insert(END,firstword[i])
     findwords.config(state=NORMAL)
-    AddToUsedList(firstword)
+    # AddToUsedList(firstword)
+    usedwords.append(firstword)
+    
 
-def FindWords():
+def FindWords(toignore=False):
     global listcell,newletterpos
     # start=clock()
+    if toignore and newletterpos:
+        newletterpos.delete(0,END)
+        CleanBackground()
     newletterpos=None
-    index = words.curselection() 
-    if index:
-        label = words.get(index)  
-        AddToUsedList(label)
+    AddToUsedList()
     CleanList(words)
     cellrow=[]
     cells=[]
@@ -147,23 +146,23 @@ for i in range(5):
     rows.append(cols)
 
 newword = Button(root, text='Добавить в словарь',command=NewWord)
-checkword = Button(root, text='Проверить в словаре',command=CheckWord)
 newgame = Button(root, text='Новая игра',command=NewGame)
 findwords = Button(root, text='Найти слова',command=FindWords,state=DISABLED)
 words =  Listbox(root, height=7,selectmode=EXTENDED)
 usedlist =  Listbox(root, height=21,selectmode=SINGLE)
 wordcount = Label(text='0')
 addtoused = Button(root, text='Игнорировать слово',command=AddToUsed)
+delword = Button(root, text='Удалить из словаря',command=DeleteWord)
 words.bind('<Button-1>', ListClicked) 
 newword.pack()
-checkword.pack(pady=5)
 wordcount.pack()
 newgame.pack(pady=10)
 board.pack()
 findwords.pack(pady=3)
 words.pack()
-usedlist.pack(pady=3)
 addtoused.pack()
+usedlist.pack(pady=3)
+delword.pack()
 
 logic.Init()
 wordcount.config(text="слов: "+str(logic.GetWordCount()))
