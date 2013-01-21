@@ -63,7 +63,27 @@ def NewWord():
     wordcount.config(text="слов: "+str(logic.GetWordCount()))
 
 def DeleteWord():
-    pass
+    index = words.curselection() 
+    if not index:
+        return
+    todelete = words.get(index)
+    for f in ("userdict","wordlist"):
+        loaded=set()
+        for l in open(f):
+            current=l.strip()
+            if current!=todelete:
+                loaded.add(current)
+            else:
+                delfiles=open("dellist","a")
+                delfiles.write(current+"\n")
+                delfiles.close()
+        update=open(f,"w")
+        update.write("\n".join(loaded))
+        update.close()
+    FindWords(True)
+
+
+
 
 def NewGame():
     global usedwords,listcell
