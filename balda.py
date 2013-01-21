@@ -39,12 +39,13 @@ def CleanList(l):
     if l.size():
         l.delete(0,l.size())
 
-def AddToUsedList():
+def AddToUsedList(append=True):
     index = words.curselection() 
     if index:
         label = words.get(index)  
         usedwords.append(label)
-        usedlist.insert('end',label)
+        if append:
+            usedlist.insert('end',label)
 
 def AddToUsed():
     FindWords(True)
@@ -80,7 +81,7 @@ def DeleteWord():
         update=open(f,"w")
         update.write("\n".join(loaded))
         update.close()
-    FindWords(True)
+    FindWords(True,False)
 
 
 
@@ -104,14 +105,14 @@ def NewGame():
     usedwords.append(firstword)
     
 
-def FindWords(toignore=False):
+def FindWords(toignore=False,append=True):
     global listcell,newletterpos
     # start=clock()
     if toignore and newletterpos:
         newletterpos.delete(0,END)
         CleanBackground()
     newletterpos=None
-    AddToUsedList()
+    AddToUsedList(append)
     CleanList(words)
     cellrow=[]
     cells=[]
