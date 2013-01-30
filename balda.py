@@ -1,4 +1,5 @@
 # -*- coding: cp1251 -*-
+# для python 2
 # графический интерфейс для решателя "Балды"
 from tkinter import *
 from tkinter.simpledialog import askstring
@@ -52,6 +53,8 @@ def AddToUsed():
 
 def NewWord():
     newword=askstring("Новое слово","Введите слово").strip()
+    if newword:
+        newword.strip()
     if len(newword)<3:
         showerror("ошибка!","длина слова должна быть не меньше 3 символов")
         return
@@ -89,7 +92,7 @@ def DeleteWord():
 def NewGame():
     global usedwords,listcell
     firstword=askstring("Начало игры","Введите слово") #"слово" #
-    if len(firstword)!=5:
+    if firstword and len(firstword)!=5:
         showerror("ошибка!","длина слова должна быть 5 символов")
         return
     usedwords=[]
@@ -126,11 +129,11 @@ def FindWords(toignore=False,append=True):
     for c in cells:
         c.MakeNodes(cellrow)
     listcell=[]
-    findedwords=sorted(logic.FindWords(cells),key=lambda item: len(item[0]),reverse=True)
-    for w in findedwords:     
-        if w[0] not in usedwords:
-            words.insert('end',w[0])
-            listcell.append((w[1],w[2],w[3]))
+    findedwords=sorted( filter(lambda item: item[0] not in usedwords, logic.FindWords(cells)),key=lambda item: len(item[0]) ,reverse=True)
+    maxsize=len(findedwords[0][0])
+    for w in sorted(filter(lambda i: len(i[0])==maxsize,findedwords), key=lambda item: item[0]):     
+        words.insert('end',w[0])
+        listcell.append((w[1],w[2],w[3]))
     # print(clock()-start)
     
     
@@ -170,7 +173,7 @@ newword = Button(root, text='Добавить в словарь',command=NewWord)
 newgame = Button(root, text='Новая игра',command=NewGame)
 findwords = Button(root, text='Найти слова',command=FindWords,state=DISABLED)
 words =  Listbox(root, height=7,selectmode=EXTENDED)
-usedlist =  Listbox(root, height=21,selectmode=SINGLE)
+usedlist =  Listbox(root, height=17,selectmode=SINGLE)
 wordcount = Label(text='0')
 addtoused = Button(root, text='Игнорировать слово',command=AddToUsed)
 delword = Button(root, text='Удалить из словаря',command=DeleteWord)
