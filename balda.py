@@ -1,5 +1,5 @@
 # -*- coding: cp1251 -*-
-# для python 2
+# для python 3
 # графический интерфейс для решателя "Балды"
 from tkinter import *
 from tkinter.simpledialog import askstring
