@@ -41,7 +41,7 @@ def MakeTree(w,t):
 
 def LoadData(filename):
     global words
-    for w in open(filename):
+    for w in open(filename,"r",1,'utf8'):
         word=w.strip()
         size=len(word)
         if size<2:
